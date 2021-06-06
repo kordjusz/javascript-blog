@@ -99,7 +99,7 @@ body {
 
 .authors {
   li {
-    margin-bottom: 12px;
+    margin-bottom: 5px;
   }
 }
 
@@ -148,4 +148,9 @@ body {
 
 .tag-size-5 {
   font-size: 32px;
+}
+
+.list .tags li {
+  padding:0 ;
+  margin: 0;
 }
