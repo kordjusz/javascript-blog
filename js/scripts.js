@@ -31,7 +31,8 @@ const optArticleSelector = '.post',
   optArticleAuthorSelector = '.post-author',
   optArticleAuthorSelectorA = '.post-author a',
   optArticleTagsSelectorA = '.post-tags .list li a',
-  optRightBannerAuthor = '.list.authors',
+  optAuthorsListSelector = '.list.authors',
+  optAuthorsListSelectorA = '.list.authors a',
   optCloudClassCount = 5,
   optCloudClassPrefix = 'tag-size-',
   optTagsListSelector = '.tags.list',
@@ -132,22 +133,41 @@ function calculateTagClass(count,params){
 generateTags();
 
 function generateAuthors(){
+  let authorTags = {};
   const articles = document.querySelectorAll(optArticleSelector);
-  const postAuthorrightBanner = document.querySelector(optRightBannerAuthor);
+  let postAuthorrightBanner = document.querySelector(optAuthorsListSelector);
+
 
   for(let article of articles){
+
     const authorName = article.getAttribute('data-author');
     const authorLink = `<a href="#${authorName}"> by ${authorName}</a>`;
-    const authorLinkRightBanner = `<li><a href="#${authorName}">${authorName}</a></li>`;
+    //const authorLinkRightBanner = `<li><a href="#${authorName}">${authorName}</a></li>`;
 
+    // eslint-disable-next-line no-prototype-builtins
+    if(!authorTags.hasOwnProperty(authorName)){
+      authorTags[authorName] = 1;
+    } else {
+      authorTags[authorName]++;
+    }
+
+
+    // for(let authorName of authorTags){
+    //   const rightBannerAuthorHTMl = `<li><a href="#${authorName}">${authorName}(${authorTags[authorName]})</a></li>`;
+    //   console.log(rightBannerAuthorHTMl);
+    // }
 
     const postAuthor = article.querySelector(optArticleAuthorSelector);
 
     postAuthor.innerHTML = authorLink;
-    postAuthorrightBanner.insertAdjacentHTML('beforeend', authorLinkRightBanner);
+    postAuthorrightBanner.innerHTML ='';
+
+    console.log(authorTags);
+    for(let authorName in authorTags){
+      const authorTagLinkHTML = '<li><a href="#' + authorName + '">' + authorName + ' (' + authorTags[authorName] + ') ' +  '</a></li>';
+      postAuthorrightBanner.innerHTML += authorTagLinkHTML;
+    }
   }
-
-
 }
 generateAuthors();
 
@@ -205,9 +225,14 @@ function authorClickHandler(event){
 
 function addClickListenersToAuthors(){
   const postAuthors = document.querySelectorAll(optArticleAuthorSelectorA);
+  const rightBannerAuthors = document.querySelectorAll(optAuthorsListSelectorA);
 
   for(let author of postAuthors){
     author.addEventListener('click', authorClickHandler);
+  }
+
+  for(let rightBannerAuthor of rightBannerAuthors){
+    rightBannerAuthor.addEventListener('click', authorClickHandler);
   }
 }
 
